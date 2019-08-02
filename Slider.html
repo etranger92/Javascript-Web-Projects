@@ -1,0 +1,127 @@
+<!doctype HTML>
+
+<html>
+
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+		.slider {
+			width: 3%;
+			border: 1px solid black;
+			border-radius: 15px;
+			background-color: white;
+		}
+		#main-div {
+			display: flex;
+			border-style: solid;
+			justify-content: center;
+			align-items: center;
+			height: 1000px;
+			background-color: black;
+		}
+		#displayPics {
+			height: 80%;
+			width: 90%;
+			background-size: cover;
+			background-repeat: no-repeat;
+			background-image: url(../../pexels.com/Alone.jpeg);
+		}
+		img {
+			width: 500px;
+			display: none;
+		}
+		img:nth-child(3) {
+			width: 800px;
+		}
+		#precedent {
+			position: absolute;
+			top: 50%;
+			left: 2%;
+		}
+		#next {
+			position: absolute;
+			right: 2%;
+			top: 50%;
+		}
+		#displayPics {
+			border-style: solid;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div id="main-div">
+		<input type="button" class="slider" name="buttonPrecedent" id="precedent">
+
+		<img class="pics" src="../../pexels.com/Alone.jpeg">
+		<img class="pics" src="../../pexels.com/bateau.jpeg">
+		<img class="pics" src="../../pexels.com/pexels-photo-2220336.jpeg">
+		<img class="pics" src="../../pexels.com/smileMan.jpg">
+		<img class="pics" src="../../pexels.com/wallPaint.jpg">
+		<img class="pics" src="../../pexels.com/Meels.jpg">
+
+
+		<div id="displayPics">
+		</div>
+		<input type="button" class="slider" id="next">
+	</div>
+
+
+
+	<script>
+		/* We target our HTML elements with JS */
+		var buttonPrevious = document.getElementById("precedent");
+		var buttonNext = document.getElementById("next");
+		var pickImages = document.getElementsByClassName("pics");
+		var displayImage = document.getElementById("displayPics");
+		var extractSrcImage = [];
+		/* We create a regex to match the source of the destination for each images, we are going to target the img.outerHTML where the destination of the img is located.
+	    Note: Instead of using a regex we could have a folder in our desk with all pictures, sharing the same name but with a different number added at the end. With the "counter" we would have been through them. It seems a better way but using the regex was a good exercice for me
+        Go here to check the regex: https://regex101.com/ -  put as string : 
+		<img class="pics" src="..//....///334443//hoto-2220336.jpeg"> - And enter: (?<=src=").+(?=["] */
+		function extractSrcImages() {
+			var regex = /(?<=src=").+(?=["])/g
+			var srcImage = "";
+			for (var i = 0; pickImages.length > i; i++) {
+				srcImage = pickImages[i].outerHTML;
+				if (regex.test(srcImage)) {
+					extractSrcImage.push(srcImage.match(regex))
+				}
+			}
+		}
+        
+		extractSrcImages(); 
+		
+		//  Our events on click: Slider. 
+		buttonNext.addEventListener("click", nextImage);
+		buttonPrevious.addEventListener("click", previousImage)
+		// our increment.
+		var counter = 0;
+       // our two functions for button.
+		function nextImage() {
+			counter++;
+			if (counter === extractSrcImage.length) {
+				counter = 0;
+			}
+			displayImage.style.backgroundImage = "url(" + extractSrcImage[counter] + ")";
+		}
+		function previousImage() {
+			counter--;
+			if (counter === -1) {
+				counter = 0;
+			}
+			displayImage.style.backgroundImage = "url(" + extractSrcImage[counter] + ")";
+		}
+	</script>
+</body>
+
+</html>
