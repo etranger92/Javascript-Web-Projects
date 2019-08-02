@@ -1,0 +1,221 @@
+<!doctype HTML>
+
+<html>
+
+
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		body {
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			align-items: center;
+			height: 900px;
+			width: 100%;
+			
+			
+		}
+
+		#div-calculator {
+
+			width: 800px;
+		
+		}
+
+		div section {
+
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			grid-auto-rows: minmax(40px, 120px);
+			border-style: solid;
+			
+
+		}
+
+		#displayValue {
+			grid-column: 1/5;
+			font-size: 50px;
+			text-align: right;
+
+		}
+
+		.number {
+			color: black;
+		}
+
+		button {
+			font-size: 20px;
+		}
+
+		button:hover {
+			background: grey;
+		}
+
+		#result {
+			color: red;
+		}
+		#clear {
+			color: red;
+		}
+
+	</style>
+
+</head>
+
+<body>
+	<h1> Calculator</h1>
+	<div id="div-calculator">
+
+		<section id="calculator">
+
+			<textarea id="displayValue"></textarea>
+			<button class="number">7</button>
+			<button class="number">8</button>
+			<button class="number">9</button>
+			<button class="operator">*</button>
+			<button class="number">4</button>
+			<button class="number">5</button>
+			<button class="number">6</button>
+			<button class="operator">-</button>
+			<button class="number">1</button>
+			<button class="number">2</button>
+			<button class="number">3</button>
+			<button class="operator">+</button>
+			<button id="clear">clear</button>
+			<button class="number">0</button>
+			<button id="result">Result</button>
+			<button class="operator">/</button>
+
+		</section>
+
+
+
+
+
+	</div>
+
+
+
+
+	<script>
+		//Target my elements;
+		var displayVal = document.getElementById("displayValue");
+		var getButtons = document.getElementsByTagName("button");
+		var clearButton = document.getElementById("clear");
+		var result = document.getElementById("result");
+		var fullEntryDisplay = "";
+		var classNameButton = "";
+		var valueButton = "";
+
+
+
+
+		//We add a clickEvent for each button.
+		for (var i = 0; getButtons.length > i; i++) {
+
+			getButtons[i].addEventListener("click", displayTheValue);
+
+		}
+
+
+
+		// We will display each value of the button pressed in the screen and save his value and className. 
+		function displayTheValue(e) {
+			//here I clear the 0 in case if someone has pressed the button "clear". If we do not do that a "0" will be added in the begining of my number.
+			if (displayVal.innerHTML == 0) {
+				displayVal.innerHTML = null;
+			}
+
+			//Collect the value needed (value & className);
+
+			valueButton = e.target.innerHTML;
+			classNameButton = e.target.className;
+
+			// We display each entry (value) to the user's screen except "result" that will display the result itself.
+			if (valueButton !== "Result") {
+				displayVal.innerHTML += valueButton;
+				fullEntryDisplay = displayValue.innerHTML;
+			}
+
+		}
+
+		// Here, when the user wants the result of his operation.
+		result.addEventListener("click", calculate);
+
+		
+		/* - We save the first number before the first operator.
+		   - We iterate over the fullEntry of the user (calcule required).
+		   -  Each time an operator is found, we save the number after it, and we add it to the initial number (a), the first entry typed in the screen.  Then we empty the array.
+		   Practical example:    a + b + c
+		   numberBeforeFirstOperator  = a
+		   result = numberBeforeFirstOperator
+		   addition.push(b)
+		   result += b     => addition[0]
+		   delete b from addition.   addition empty
+		   addition.push(c)
+		   result += c;  addition [0];
+		 */
+		function calculate() {
+			
+			var regexFirstNumberBeforeOperator = /^\d+(?=[?+*-\/])/gi;
+			var numberBeforeFirstOperator = Number(fullEntryDisplay.match(regexFirstNumberBeforeOperator));
+			var addition = [];
+			var substraction = [];
+			var multiplication = [];
+			var division = [];
+			var result = numberBeforeFirstOperator;
+
+
+			for (var i = 0; fullEntryDisplay.length > i; i++) {
+
+				if (fullEntryDisplay[i] === "+") {
+					addition.push(Number(fullEntryDisplay[i + 1]));
+					result += Number(addition[0]);
+					addition.splice(0, 1);
+
+
+				} else if (fullEntryDisplay[i] === "-") {
+					substraction.push(Number(fullEntryDisplay[i + 1]));
+					result -= Number(substraction[0]);
+					substraction.splice(0, 1);
+
+
+				} else if (fullEntryDisplay[i] === "*") {
+					multiplication.push(Number(fullEntryDisplay[i + 1]));
+					result *= Number(multiplication[0]);
+					multiplication.splice(0, 1);
+
+
+				}
+				if (fullEntryDisplay[i] === "/") {
+					division.push(Number(fullEntryDisplay[i + 1]));
+					result /= Number(division[0]);
+					division.splice(0, 1);
+				}
+			}
+
+			displayVal.innerHTML = result;
+
+		}
+
+// To clear any entries we do not want.
+		clearButton.addEventListener("click", function() {
+			var clearDisplayScreen = 0;
+			displayValue.innerHTML = clearDisplayScreen;
+			numberString = " ";
+			theResult = 0;
+
+		})
+
+	</script>
+</body>
+
+</html>
